@@ -64,7 +64,7 @@ export default function Index() {
       )}
       style={{
         backgroundImage:
-          'url("https://cdn.builder.io/api/v1/image/assets%2F306c8285e5754f408c22e409216c2b75%2Fb4594338ee2442f681377cca2c75a826?format=webp&width=800")',
+          'url("https://cdn.builder.io/api/v1/image/assets/306c8285e5754f408c22e409216c2b75/b4594338ee2442f681377cca2c75a826")',
         backgroundPosition: "center top",
       }}
     >
