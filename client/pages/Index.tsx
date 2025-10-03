@@ -60,8 +60,13 @@ export default function Index() {
   return (
     <main
       className={cn(
-        "mx-auto max-w-7xl w-full px-4 md:px-6 pb-12 pt-6 md:pt-8 min-h-screen",
+        "mx-auto max-w-7xl w-full px-4 md:px-6 pb-12 pt-6 md:pt-8 min-h-screen bg-no-repeat bg-cover bg-center",
       )}
+      style={{
+        backgroundImage:
+          'url("https://cdn.builder.io/api/v1/image/assets%2F306c8285e5754f408c22e409216c2b75%2Fb4594338ee2442f681377cca2c75a826?format=webp&width=800")',
+        backgroundPosition: "center top",
+      }}
     >
       <h1 className="sr-only">
         Azerbaijan Ministry of Energy Electronic Information Board
