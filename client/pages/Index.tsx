@@ -67,7 +67,7 @@ export default function Index() {
         Azerbaijan Ministry of Energy Electronic Information Board
       </h1>
       <div className="flex flex-col items-center gap-6 md:gap-8">
-        <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-12 gap-5 md:gap-7 justify-items-center">
+        <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-12 gap-3 md:gap-5 justify-items-center">
           {row1.map((s) => {
             const Icon = icons[s.id];
             const title = lang === "az" ? s.title_az : s.title_en;
@@ -79,14 +79,14 @@ export default function Index() {
                 onClick={() => navigate(`/section/${s.id}`)}
                 className={cn(
                   "group relative rounded-2xl border bg-card p-4 md:p-5 text-center shadow-sm hover:shadow-md transition-all h-full w-full flex flex-col",
-                  "ring-1 ring-inset ring-border focus-visible:outline-none w-full h-[260px] overflow-hidden lg:col-span-2",
+                  "ring-1 ring-inset ring-border focus-visible:outline-none w-full h-auto min-h-[240px] overflow-hidden lg:col-span-2",
                 )}
               >
                 <div
                   className="rounded-xl border overflow-hidden flex-shrink-0"
                   style={{ borderColor: "hsl(217 80% 45%)" }}
                 >
-                  <div className="w-full h-[180px] bg-muted/40 grid place-items-center overflow-hidden">
+                  <div className="w-full h-[160px] bg-muted/40 grid place-items-center overflow-hidden">
                     {img ? (
                       <img
                         src={img}
@@ -101,7 +101,7 @@ export default function Index() {
                   </div>
                 </div>
 
-                <div className="mt-3 md:mt-4 flex items-center justify-center">
+                <div className="mt-2 md:mt-3 flex items-center justify-center">
                   <div className="text-base md:text-lg font-semibold tracking-tight min-h-[32px]">
                     {title}
                   </div>
@@ -112,7 +112,7 @@ export default function Index() {
         </div>
         <div
           className={cn(
-            "w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-12 gap-5 md:gap-7 justify-items-center",
+            "w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-12 gap-3 md:gap-5 justify-items-center",
             row2.length > 0 && row2.length < row1.length ? "lg:[&>*:first-child]:col-start-2" : undefined,
           )}
         >
@@ -127,14 +127,14 @@ export default function Index() {
                 onClick={() => navigate(`/section/${s.id}`)}
                 className={cn(
                   "group relative rounded-2xl border bg-card p-4 md:p-5 text-center shadow-sm hover:shadow-md transition-all h-full w-full flex flex-col",
-                  "ring-1 ring-inset ring-border focus-visible:outline-none w-full h-[260px] overflow-hidden lg:col-span-2",
+                  "ring-1 ring-inset ring-border focus-visible:outline-none w-full h-auto min-h-[240px] overflow-hidden lg:col-span-2",
                 )}
               >
                 <div
                   className="rounded-xl border overflow-hidden flex-shrink-0"
                   style={{ borderColor: "hsl(217 80% 45%)" }}
                 >
-                  <div className="w-full h-[180px] bg-muted/40 grid place-items-center overflow-hidden">
+                  <div className="w-full h-[160px] bg-muted/40 grid place-items-center overflow-hidden">
                     {img ? (
                       <img
                         src={img}
@@ -149,7 +149,7 @@ export default function Index() {
                   </div>
                 </div>
 
-                <div className="mt-3 md:mt-4 flex items-center justify-center">
+                <div className="mt-2 md:mt-3 flex items-center justify-center">
                   <div className="text-base md:text-lg font-semibold tracking-tight min-h-[32px]">
                     {title}
                   </div>
