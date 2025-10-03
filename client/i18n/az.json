@@ -1,0 +1,36 @@
+{
+  "home": "Ana səhifə",
+  "back": "Geri",
+  "search_placeholder": "Axtarış...",
+  "official_site": "Rəsmi sayt",
+  "sections": "Bölmələr",
+  "articles": "Məqalələr",
+  "pages": "Səhifələr",
+  "albums": "Albümlər",
+  "media": "Media",
+  "search_results": "Axtarış nəticələri",
+  "no_results": "Heç bir nəticə tapılmadı",
+  "enter_keyword": "Axtarış üçün açar söz daxil edin",
+
+  "gallery_albums_heading": "Foto və Video Albümləri",
+  "gallery_albums_subtitle": "Nazirliyin fəaliyyəti və layihələri ilə bağlı foto və video materiallar",
+  "gallery_back_to_albums": "Albümlərə qayıt",
+  "album": "Albom",
+
+  "phone": "Telefon",
+  "email": "Email",
+  "working_hours": "İş saatları",
+  "address": "Ünvan",
+  "social_media": "Sosial şəbəkələr",
+  "view_on_map": "Xəritədə bax",
+
+  "pr_intro": "Mətbuat və media sorğuları üçün aşağıdakı əlaqə vasitələrindən istifadə edin.",
+  "pr_guidelines": "Mətbuat qaydaları",
+  "pr_guideline_default_1": "Sorğulara 1 iş günü ərzində cavab verilir.",
+  "pr_guideline_default_2": "Sorğularda mövzu, tarix və əlaqə məlumatlarını qeyd edin.",
+
+  "contact_intro": "Nazirliklə əlaqə üçün aşağıdakı məlumatlardan istifadə edin.",
+
+  "section_default_paragraph": "Bu bölmədə Energetika Nazirliyinin fəaliyyəti ilə bağlı məlumatlar, rəqəmlər və əlaqədar materiallar təqdim olunur. Aşağıda son məqalələr ilə tanış ola bilərsiniz.",
+  "articles_empty": "Məlumat yoxdur"
+}
