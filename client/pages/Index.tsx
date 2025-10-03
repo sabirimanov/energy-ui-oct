@@ -78,15 +78,15 @@ export default function Index() {
                 key={s.id}
                 onClick={() => navigate(`/section/${s.id}`)}
                 className={cn(
-                  "group relative rounded-2xl border bg-card p-6 md:p-7 text-center shadow-sm hover:shadow-md transition-all h-full w-full flex flex-col",
+                  "group relative rounded-2xl border bg-card p-4 md:p-5 text-center shadow-sm hover:shadow-md transition-all h-full w-full flex flex-col",
                   "ring-1 ring-inset ring-border focus-visible:outline-none w-full h-[260px] overflow-hidden lg:col-span-2",
                 )}
               >
                 <div
-                  className="rounded-xl border-2 overflow-hidden flex-shrink-0"
+                  className="rounded-xl border overflow-hidden flex-shrink-0"
                   style={{ borderColor: "hsl(217 80% 45%)" }}
                 >
-                  <div className="w-full h-[140px] bg-muted/40 grid place-items-center overflow-hidden">
+                  <div className="w-full h-[180px] bg-muted/40 grid place-items-center overflow-hidden">
                     {img ? (
                       <img
                         src={img}
@@ -126,15 +126,15 @@ export default function Index() {
                 key={s.id}
                 onClick={() => navigate(`/section/${s.id}`)}
                 className={cn(
-                  "group relative rounded-2xl border bg-card p-6 md:p-7 text-center shadow-sm hover:shadow-md transition-all h-full w-full flex flex-col",
+                  "group relative rounded-2xl border bg-card p-4 md:p-5 text-center shadow-sm hover:shadow-md transition-all h-full w-full flex flex-col",
                   "ring-1 ring-inset ring-border focus-visible:outline-none w-full h-[260px] overflow-hidden lg:col-span-2",
                 )}
               >
                 <div
-                  className="rounded-xl border-2 overflow-hidden flex-shrink-0"
+                  className="rounded-xl border overflow-hidden flex-shrink-0"
                   style={{ borderColor: "hsl(217 80% 45%)" }}
                 >
-                  <div className="w-full h-[140px] bg-muted/40 grid place-items-center overflow-hidden">
+                  <div className="w-full h-[180px] bg-muted/40 grid place-items-center overflow-hidden">
                     {img ? (
                       <img
                         src={img}
