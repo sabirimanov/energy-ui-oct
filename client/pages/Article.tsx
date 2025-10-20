@@ -16,22 +16,6 @@ export default function ArticlePage() {
     (a) => String(a.id) === String(articleId),
   );
 
-  if (!section || !article) {
-    return (
-      <main className="mx-auto max-w-7xl w-full px-4 md:px-6 py-10 min-h-screen">
-        <Breadcrumbs />
-        <div className="text-muted-foreground">
-          {lang === "az" ? "Məqalə tapılmadı" : "Article not found"}
-        </div>
-      </main>
-    );
-  }
-
-  const idx = section.articles.findIndex(
-    (a) => String(a.id) === String(articleId),
-  );
-  const alignRight = idx % 2 === 0;
-
   const contentRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const root = contentRef.current;
@@ -49,7 +33,23 @@ export default function ArticlePage() {
         a.setAttribute('rel','noopener noreferrer');
       }
     });
-  }, [lang, article?.body]);
+  }, [lang, id, articleId]);
+
+  if (!section || !article) {
+    return (
+      <main className="mx-auto max-w-7xl w-full px-4 md:px-6 py-10 min-h-screen">
+        <Breadcrumbs />
+        <div className="text-muted-foreground">
+          {lang === "az" ? "Məqalə tapılmadı" : "Article not found"}
+        </div>
+      </main>
+    );
+  }
+
+  const idx = section.articles.findIndex(
+    (a) => String(a.id) === String(articleId),
+  );
+  const alignRight = idx % 2 === 0;
 
   return (
     <main className="mx-auto max-w-7xl w-full px-4 md:px-6 pb-16 pt-6 md:pt-8 min-h-screen">
