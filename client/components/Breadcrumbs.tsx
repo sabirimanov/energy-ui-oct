@@ -11,6 +11,31 @@ export default function Breadcrumbs() {
   const { id, articleId, pageId } = useParams();
 
   const isHome = location.pathname === "/";
+
+  // Helpers to resolve page and its parent recursively
+  const findPageRec = (
+    list: any[] | undefined,
+    pid?: string,
+    parent?: any,
+  ): { page: any; parent?: any } | undefined => {
+    if (!list || !pid) return undefined;
+    for (const p of list) {
+      if (String(p.id) === String(pid)) return { page: p, parent };
+      const child = findPageRec((p as any)?.children as any[], pid, p);
+      if (child) return child;
+    }
+    return undefined;
+  };
+
+  const resolveSectionForPage = (pid?: string) => {
+    if (!pid) return undefined as any;
+    for (const s of menu) {
+      const res = findPageRec((s as any).pages as any[], pid);
+      if (res) return { section: s, ...res };
+    }
+    return undefined as any;
+  };
+
   const sectionTitleMap: Record<string, string> = {
     ministry: lang === "az" ? "Nazirlik" : "Ministry",
     news: lang === "az" ? "Xəbərlər və Elanlar" : "News & Announcements",
@@ -26,15 +51,38 @@ export default function Breadcrumbs() {
   } as const;
 
   // Get current section, article, or page details
-  const section = id ? menu.find((s: any) => String(s.id) === String(id)) : null;
-  const article = section && articleId ? section.articles.find((a) => String(a.id) === String(articleId)) : null;
-  const page = section && pageId ? section.pages?.find((p) => String(p.id) === String(pageId)) : null;
+  let section = id ? (menu.find((s: any) => String(s.id) === String(id)) as any) : null;
+  const article = section && articleId ? section.articles.find((a: any) => String(a.id) === String(articleId)) : null;
 
-  const sectionTitle = section ? (lang === "az" ? (section as any).title_az : (section as any).title_en) : (sectionTitleMap[id ?? ""] ?? "");
+  let page: any = null;
+  let parentPage: any = null;
+  if (pageId) {
+    // Try param-resolved section first
+    if (section) {
+      const res = findPageRec((section as any)?.pages as any[], pageId);
+      page = res?.page ?? null;
+      parentPage = res?.parent ?? null;
+    }
+    // Fallback: search entire menu
+    if (!page) {
+      const res = resolveSectionForPage(pageId);
+      if (res) {
+        section = section ?? (res.section as any);
+        page = res.page;
+        parentPage = res.parent ?? null;
+      }
+    }
+  }
+
+  const sectionTitle = section ? (lang === "az" ? (section as any).title_az : (section as any).title_en) : (id ? (sectionTitleMap[id] ?? "") : (section ? (lang === "az" ? (section as any).title_az : (section as any).title_en) : ""));
   const articleTitle = article ? (lang === "az" ? article.title.az : article.title.en) : "";
   const pageTitle = page ? (lang === "az" ? page.title.az : page.title.en) : "";
 
-  const fallback = (articleId || pageId) ? `/section/${id}` : "/";
+  const fallback = articleId
+    ? (id ? `/section/${id}` : "/")
+    : pageId
+      ? (parentPage ? `/page/${parentPage.id}` : (section ? `/section/${section.id}` : "/"))
+      : "/";
   const handleBack = () => {
     const sameOriginReferrer = !!document.referrer && document.referrer.startsWith(window.location.origin);
     if (window.history.length > 1 && sameOriginReferrer) {
