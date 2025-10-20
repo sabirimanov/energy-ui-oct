@@ -190,7 +190,7 @@ export default function Header() {
                 <Search className="h-4 w-4" />
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-transparent border-none shadow-none p-0">
+            <DialogContent className="bg-transparent border-none shadow-none px-4 pt-16 max-w-2xl">
               <DialogTitle className="sr-only">{lang === "az" ? "Axtarış" : "Search"}</DialogTitle>
               <div className="w-full max-w-xl mx-auto relative">
                 <Input
