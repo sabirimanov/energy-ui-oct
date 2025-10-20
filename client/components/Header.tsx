@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { Facebook, Globe, Instagram, Linkedin, Menu, Search, Send, X, Youtube } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useSettings } from "@/contexts/settings";
@@ -191,6 +191,7 @@ export default function Header() {
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-transparent border-none shadow-none p-0">
+              <DialogTitle className="sr-only">{lang === "az" ? "Axtarış" : "Search"}</DialogTitle>
               <div className="w-full max-w-xl mx-auto relative">
                 <Input
                   autoFocus
