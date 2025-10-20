@@ -124,7 +124,7 @@ export default function Header() {
     <header className="sticky top-0 z-30 w-full border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="mx-auto max-w-7xl w-full px-4 md:px-6 py-2 md:py-2.5 grid grid-cols-3 items-center gap-3">
         {/* Left: Lang -> 974 -> Date/Time */}
-        <div className="col-span-1 flex items-center gap-2 md:gap-3">
+        <div className="col-span-1 flex items-center gap-1 md:gap-2">
           <div className="flex bg-muted rounded-lg p-1">
             <button
               aria-label="Azerbaijani"
@@ -143,9 +143,9 @@ export default function Header() {
           </div>
 
 
-          <div className="flex flex-col text-foreground tabular-nums w-[220px] md:w-[260px] leading-tight">
-            <span className="text-sm md:text-base leading-tight text-center">{dateParts.date}</span>
-            <span className="text-[1.8rem] font-semibold leading-tight text-center">{dateParts.time}</span>
+          <div className="flex flex-col text-foreground tabular-nums leading-tight">
+            <span className="text-[0.7rem] leading-tight text-left">{dateParts.date}</span>
+            <span className="text-[1.3rem] font-semibold leading-tight text-left">{dateParts.time}</span>
           </div>
         </div>
 
@@ -162,7 +162,7 @@ export default function Header() {
 
         {/* Right: Socials, Search icon, Menu */}
         <div className="col-span-1 flex items-center justify-end gap-2 md:gap-3">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center mr-2 md:mr-3">
             <Button className="h-10 px-4 w-24 rounded-2xl text-2xl font-bold bg-primary hover:bg-primary/90">974</Button>
             <span className="block text-[10px] font-semibold text-muted-foreground text-center uppercase tracking-[0.08em] w-24 whitespace-nowrap">{lang === "az" ? "Çağrı Mərkəzi" : "Call Center"}</span>
           </div>
