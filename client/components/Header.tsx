@@ -142,18 +142,10 @@ export default function Header() {
             </button>
           </div>
 
-          <div className="flex flex-col items-center">
-            <Button className="h-10 px-4 w-24 rounded-2xl text-2xl font-bold bg-primary hover:bg-primary/90">
-              974
-            </Button>
-            <span className="block text-[10px] md:text-[11px] font-semibold text-muted-foreground text-center uppercase tracking-[0.08em] w-24">
-              {lang === "az" ? "Çağrı Mərkəzi" : "Call Center"}
-            </span>
-          </div>
 
           <div className="flex flex-col text-foreground tabular-nums w-[220px] md:w-[260px] leading-tight">
             <span className="text-sm md:text-base leading-tight text-center">{dateParts.date}</span>
-            <span className="text-lg md:text-2xl font-semibold leading-tight text-center">{dateParts.time}</span>
+            <span className="text-[1.8rem] font-semibold leading-tight text-center">{dateParts.time}</span>
           </div>
         </div>
 
@@ -170,6 +162,10 @@ export default function Header() {
 
         {/* Right: Socials, Search icon, Menu */}
         <div className="col-span-1 flex items-center justify-end gap-2 md:gap-3">
+          <div className="flex flex-col items-center">
+            <Button className="h-10 px-4 w-24 rounded-2xl text-2xl font-bold bg-primary hover:bg-primary/90">974</Button>
+            <span className="block text-[10px] font-semibold text-muted-foreground text-center uppercase tracking-[0.08em] w-24 whitespace-nowrap">{lang === "az" ? "Çağrı Mərkəzi" : "Call Center"}</span>
+          </div>
           <div className="flex items-center gap-2 sm:gap-2.5">
             {socialLinks.map((social, index) => {
               const Icon = resolveSocialIcon(social.label);
