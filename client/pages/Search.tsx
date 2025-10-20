@@ -72,7 +72,7 @@ export default function SearchPage() {
           )
           .map((p: any) => ({
             key: `page-${s.id}-${p.id}`,
-            to: `/section/${s.id}/page/${p.id}`,
+            to: p.redirect_url ? String(p.redirect_url) : `/section/${s.id}/page/${p.id}`,
             title: lang === "az" ? p.title.az : p.title.en,
             image: p.image,
             description: lang === "az" ? p.short_text.az : p.short_text.en,
