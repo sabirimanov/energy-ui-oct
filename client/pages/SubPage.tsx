@@ -11,16 +11,32 @@ export default function SubPage() {
   const settings = useSettings();
 
   const section = id ? menu.find((s: any) => String(s.id) === String(id)) : undefined;
-  const page = section
-    ? section.pages?.find((p) => String(p.id) === String(pageId))
-    : (() => {
-        if (!pageId) return undefined;
-        for (const s of menu) {
-          const found = s.pages?.find((p) => String(p.id) === String(pageId));
-          if (found) return found;
-        }
-        return undefined;
-      })();
+
+  const findPageRec = (list: any[] | undefined, pid?: string) => {
+    if (!list || !pid) return undefined as any;
+    for (const p of list) {
+      if (String(p.id) === String(pid)) return p;
+      const child = findPageRec((p as any)?.children as any[], pid);
+      if (child) return child;
+    }
+    return undefined as any;
+  };
+
+  const findPageInMenu = (pid?: string) => {
+    if (!pid) return undefined as any;
+    for (const s of menu) {
+      const found = findPageRec((s as any).pages as any[], pid);
+      if (found) return { page: found, section: s } as any;
+    }
+    return undefined as any;
+  };
+
+  const result = section
+    ? { page: findPageRec((section as any).pages as any[], pageId), section }
+    : findPageInMenu(pageId);
+
+  const page = result?.page;
+  const parentSection = result?.section;
 
   if (!page) {
     return (
