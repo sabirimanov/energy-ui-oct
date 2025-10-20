@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import { useData } from "@/contexts/data";
 import { useI18n } from "@/contexts/i18n";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -49,10 +50,37 @@ export default function SubPage() {
     );
   }
 
+  const contentRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const root = contentRef.current;
+    if (!root) return;
+    const anchors = Array.from(root.querySelectorAll<HTMLAnchorElement>('a[href]'));
+    const cleanups: Array<() => void> = [];
+    anchors.forEach((a) => {
+      const href = a.getAttribute('href') || '';
+      let url: URL | null = null;
+      try { url = new URL(href, window.location.origin); } catch { url = null; }
+      const external = !!url && url.origin !== window.location.origin;
+      a.classList.add('text-blue-600','underline');
+      a.classList.add('hover:text-blue-700');
+      if (external) {
+        a.setAttribute('target','_blank');
+        a.setAttribute('rel','noopener noreferrer');
+        const handler = (e: Event) => {
+          e.stopPropagation();
+        };
+        a.addEventListener('click', handler);
+        cleanups.push(() => a.removeEventListener('click', handler));
+      }
+    });
+    return () => { cleanups.forEach((fn) => fn()); };
+  }, [lang, page?.body]);
+
   return (
     <main className="mx-auto max-w-7xl w-full px-4 md:px-6 pb-16 pt-6 md:pt-8 min-h-screen">
       <Breadcrumbs />
-      
+
       <div className="mt-1">
         <h1 className="text-2xl md:text-4xl font-bold tracking-tight">
           {lang === "az" ? page.title.az : page.title.en}
@@ -69,7 +97,7 @@ export default function SubPage() {
         </div>
       )}
 
-      <div className="prose prose-slate max-w-none mt-6">
+      <div className="prose prose-slate max-w-none mt-6 prose-a:text-blue-600 prose-a:underline hover:prose-a:text-blue-700" ref={contentRef}>
         {(() => {
           const html = lang === "az" ? page.body.az : page.body.en;
           const isHtml = /<\w+/.test(html);
