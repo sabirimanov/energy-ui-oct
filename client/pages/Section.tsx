@@ -151,13 +151,51 @@ export default function SectionPage() {
           </div>
         </div>
         <div className="justify-self-end">
-          <img
-            src={section.general_info.image || settings.placeholder || "/placeholder.svg"}
-            alt=""
-            className="w-full max-w-sm md:max-w-xs rounded-xl border"
-          />
+          {section.general_info.image && section.general_info.image !== "/placeholder.svg" && (
+            <img
+              src={section.general_info.image}
+              alt=""
+              className="w-full max-w-sm md:max-w-xs rounded-xl border"
+            />
+          )}
         </div>
       </section>
+
+      {/* Children Sections List */}
+      {Array.isArray((section as any)?.children) && (section as any).children.length > 0 && (
+        <section className="mt-8 md:mt-12">
+          <h3 className="text-xl md:text-2xl font-semibold">
+            {lang === "az" ? "Bölmələr" : "Sections"}
+          </h3>
+          <div className="mt-4 grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {(section as any).children.map((c: any) => (
+              <Link
+                key={c.id}
+                to={`/section/${c.id}`}
+                className="rounded-2xl border bg-card overflow-hidden hover:shadow-md transition-shadow block"
+              >
+                <div className="aspect-[16/9] w-full bg-muted/50">
+                  {c.image && c.image !== "/placeholder.svg" ? (
+                    <img src={c.image} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full grid place-items-center text-muted-foreground">{lang === "az" ? (c.title_az ?? c.title?.az) : (c.title_en ?? c.title?.en)}</div>
+                  )}
+                </div>
+                <div className="p-4 md:p-5">
+                  <h4 className="mt-1 md:mt-2 text-lg md:text-xl font-semibold">
+                    {lang === "az" ? (c.title_az ?? c.title?.az) : (c.title_en ?? c.title?.en)}
+                  </h4>
+                  {c.short_text && (
+                    <p className="mt-2 text-sm md:text-base text-muted-foreground">
+                      {lang === "az" ? (c.short_text.az ?? c.short_text) : (c.short_text.en ?? c.short_text)}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Gallery Albums (only for non-special sections) */}
       {!isSpecial && Array.isArray((section as any).albums) && (section as any).albums.length > 0 && (
