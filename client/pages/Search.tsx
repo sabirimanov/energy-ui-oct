@@ -139,22 +139,34 @@ export default function SearchPage() {
       <section className="mt-4">
         <h3 className="text-xl md:text-2xl font-semibold">{lang === "az" ? labelAz : labelEn}</h3>
         <div className="mt-3 grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((it) => (
-            <Link key={it.key} to={it.to} className="rounded-2xl border bg-card overflow-hidden hover:shadow-md transition-shadow block">
-              <div className="aspect-[16/9] w-full bg-muted/50">
-                <img src={it.image || settings.placeholder || "/placeholder.svg"} alt="" className="w-full h-full object-cover" />
-              </div>
-              <div className="p-4 md:p-5">
-                {it.meta && (
-                  <div className="text-xs md:text-sm text-muted-foreground">{it.meta}</div>
-                )}
-                <h4 className="mt-1 md:mt-2 text-lg md:text-xl font-semibold">{it.title}</h4>
-                {it.description && (
-                  <p className="mt-2 text-sm md:text-base text-muted-foreground">{it.description}</p>
-                )}
-              </div>
-            </Link>
-          ))}
+          {items.map((it) => {
+            const isExternal = /^https?:\/\//i.test(it.to);
+            const CardInner = (
+              <>
+                <div className="aspect-[16/9] w-full bg-muted/50">
+                  <img src={it.image || settings.placeholder || "/placeholder.svg"} alt="" className="w-full h-full object-cover" />
+                </div>
+                <div className="p-4 md:p-5">
+                  {it.meta && (
+                    <div className="text-xs md:text-sm text-muted-foreground">{it.meta}</div>
+                  )}
+                  <h4 className="mt-1 md:mt-2 text-lg md:text-xl font-semibold">{it.title}</h4>
+                  {it.description && (
+                    <p className="mt-2 text-sm md:text-base text-muted-foreground">{it.description}</p>
+                  )}
+                </div>
+              </>
+            );
+            return isExternal ? (
+              <a key={it.key} href={it.to} target="_blank" rel="noreferrer" className="rounded-2xl border bg-card overflow-hidden hover:shadow-md transition-shadow block">
+                {CardInner}
+              </a>
+            ) : (
+              <Link key={it.key} to={it.to} className="rounded-2xl border bg-card overflow-hidden hover:shadow-md transition-shadow block">
+                {CardInner}
+              </Link>
+            );
+          })}
         </div>
       </section>
     );
