@@ -142,14 +142,18 @@ export default function Header() {
             </button>
           </div>
 
-          <Button className="h-10 px-4 rounded-2xl text-2xl font-bold bg-primary hover:bg-primary/90">
-            974
-          </Button>
+          <div className="flex flex-col items-center">
+            <Button className="h-10 px-4 w-24 rounded-2xl text-2xl font-bold bg-primary hover:bg-primary/90">
+              974
+            </Button>
+            <span className="block text-[10px] md:text-[11px] font-semibold text-muted-foreground text-center uppercase tracking-[0.08em] w-24">
+              {lang === "az" ? "Çağrı Mərkəzi" : "Call Center"}
+            </span>
+          </div>
 
-          <div className="flex items-baseline gap-2 text-foreground tabular-nums">
-            <span className="text-sm md:text-base leading-none">{dateParts.date}</span>
-            <span className="opacity-40">|</span>
-            <span className="text-base md:text-lg font-medium leading-none">{dateParts.time}</span>
+          <div className="flex flex-col text-foreground tabular-nums w-[220px] md:w-[260px] leading-tight">
+            <span className="text-sm md:text-base leading-tight text-center">{dateParts.date}</span>
+            <span className="text-lg md:text-2xl font-semibold leading-tight text-center">{dateParts.time}</span>
           </div>
         </div>
 
