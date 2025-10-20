@@ -5,13 +5,22 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { useSettings } from "@/contexts/settings";
 
 export default function SubPage() {
-  const { id, pageId } = useParams<{ id: string; pageId: string }>();
+  const { id, pageId } = useParams<{ id?: string; pageId?: string }>();
   const { lang } = useI18n();
   const { menu } = useData();
   const settings = useSettings();
 
-  const section = menu.find((s: any) => String(s.id) === String(id));
-  const page = section?.pages?.find((p) => String(p.id) === String(pageId));
+  const section = id ? menu.find((s: any) => String(s.id) === String(id)) : undefined;
+  const page = section
+    ? section.pages?.find((p) => String(p.id) === String(pageId))
+    : (() => {
+        if (!pageId) return undefined;
+        for (const s of menu) {
+          const found = s.pages?.find((p) => String(p.id) === String(pageId));
+          if (found) return found;
+        }
+        return undefined;
+      })();
 
   if (!section || !page) {
     return (
