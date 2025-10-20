@@ -4,6 +4,7 @@ import { useI18n } from "@/contexts/i18n";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { cn } from "@/lib/utils";
 import { useSettings } from "@/contexts/settings";
+import { useEffect, useRef } from "react";
 
 export default function ArticlePage() {
   const { id, articleId } = useParams<{ id: string; articleId: string }>();
@@ -31,6 +32,25 @@ export default function ArticlePage() {
   );
   const alignRight = idx % 2 === 0;
 
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const root = contentRef.current;
+    if (!root) return;
+    const anchors = Array.from(root.querySelectorAll<HTMLAnchorElement>('a[href]'));
+    anchors.forEach((a) => {
+      const href = a.getAttribute('href') || '';
+      let url: URL | null = null;
+      try { url = new URL(href, window.location.origin); } catch { url = null; }
+      const external = !!url && url.origin !== window.location.origin;
+      a.classList.add('text-blue-600','underline');
+      a.classList.add('hover:text-blue-700');
+      if (external) {
+        a.setAttribute('target','_blank');
+        a.setAttribute('rel','noopener noreferrer');
+      }
+    });
+  }, [lang, article?.body]);
+
   return (
     <main className="mx-auto max-w-7xl w-full px-4 md:px-6 pb-16 pt-6 md:pt-8 min-h-screen">
       <Breadcrumbs />
@@ -52,7 +72,7 @@ export default function ArticlePage() {
           )}
         />
       )}
-      <div className="prose prose-slate max-w-none mt-6">
+      <div className="prose prose-slate max-w-none mt-6 prose-a:text-blue-600 prose-a:underline hover:prose-a:text-blue-700" ref={contentRef}>
         {(() => {
           const html = lang === "az" ? article.body.az : article.body.en;
           const isHtml = /<\w+/.test(html);
