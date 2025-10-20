@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useData } from "@/contexts/data";
 import { useI18n } from "@/contexts/i18n";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -34,13 +34,15 @@ export default function SubPage() {
         </h1>
       </div>
 
-      <div className="mt-6 flex justify-center">
-        <img
-          src={page.image || settings.placeholder || "/placeholder.svg"}
-          alt=""
-          className="rounded-2xl border max-w-md w-full object-cover"
-        />
-      </div>
+      {page.image && page.image !== "/placeholder.svg" && (
+        <div className="mt-6 flex justify-center">
+          <img
+            src={page.image}
+            alt=""
+            className="rounded-2xl border max-w-md w-full object-cover"
+          />
+        </div>
+      )}
 
       <div className="prose prose-slate max-w-none mt-6">
         {(() => {
@@ -53,6 +55,41 @@ export default function SubPage() {
           );
         })()}
       </div>
+
+      {Array.isArray((page as any)?.children) && (page as any).children.length > 0 && (
+        <section className="mt-8 md:mt-12">
+          <h3 className="text-xl md:text-2xl font-semibold">
+            {lang === "az" ? "Bölmələr" : "Sections"}
+          </h3>
+          <div className="mt-4 grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {(page as any).children.map((c: any) => (
+              <Link
+                key={c.id}
+                to={`/section/${c.id}`}
+                className="rounded-2xl border bg-card overflow-hidden hover:shadow-md transition-shadow block"
+              >
+                <div className="aspect-[16/9] w-full bg-muted/50">
+                  {c.image && c.image !== "/placeholder.svg" ? (
+                    <img src={c.image} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full grid place-items-center text-muted-foreground">{lang === "az" ? (c.title_az ?? c.title?.az) : (c.title_en ?? c.title?.en)}</div>
+                  )}
+                </div>
+                <div className="p-4 md:p-5">
+                  <h4 className="mt-1 md:mt-2 text-lg md:text-xl font-semibold">
+                    {lang === "az" ? (c.title_az ?? c.title?.az) : (c.title_en ?? c.title?.en)}
+                  </h4>
+                  {c.short_text && (
+                    <p className="mt-2 text-sm md:text-base text-muted-foreground">
+                      {lang === "az" ? (c.short_text.az ?? c.short_text) : (c.short_text.en ?? c.short_text)}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }
