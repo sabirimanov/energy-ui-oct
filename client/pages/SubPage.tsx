@@ -39,19 +39,7 @@ export default function SubPage() {
   const page = result?.page;
   const parentSection = result?.section;
 
-  if (!page) {
-    return (
-      <main className="mx-auto max-w-7xl w-full px-4 md:px-6 py-10 min-h-screen">
-        <Breadcrumbs />
-        <div className="text-center text-muted-foreground">
-          {lang === "az" ? "Səhifə tapılmadı" : "Page not found"}
-        </div>
-      </main>
-    );
-  }
-
   const contentRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     const root = contentRef.current;
     if (!root) return;
@@ -67,15 +55,24 @@ export default function SubPage() {
       if (external) {
         a.setAttribute('target','_blank');
         a.setAttribute('rel','noopener noreferrer');
-        const handler = (e: Event) => {
-          e.stopPropagation();
-        };
+        const handler = (e: Event) => { e.stopPropagation(); };
         a.addEventListener('click', handler);
         cleanups.push(() => a.removeEventListener('click', handler));
       }
     });
     return () => { cleanups.forEach((fn) => fn()); };
   }, [lang, page?.body]);
+
+  if (!page) {
+    return (
+      <main className="mx-auto max-w-7xl w-full px-4 md:px-6 py-10 min-h-screen">
+        <Breadcrumbs />
+        <div className="text-center text-muted-foreground">
+          {lang === "az" ? "Səhifə tapılmadı" : "Page not found"}
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto max-w-7xl w-full px-4 md:px-6 pb-16 pt-6 md:pt-8 min-h-screen">
