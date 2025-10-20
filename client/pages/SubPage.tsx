@@ -22,7 +22,7 @@ export default function SubPage() {
         return undefined;
       })();
 
-  if (!section || !page) {
+  if (!page) {
     return (
       <main className="mx-auto max-w-7xl w-full px-4 md:px-6 py-10 min-h-screen">
         <Breadcrumbs />
