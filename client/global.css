@@ -126,6 +126,13 @@
   }
 }
 
+@layer base {
+  figure.table,
+  figure.table table {
+    width: 100% !important;
+  }
+}
+
 @layer utilities {
   .bg-abstract {
     background-image:
