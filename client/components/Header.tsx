@@ -143,7 +143,7 @@ export default function Header() {
           </div>
 
 
-          <div className="flex flex-col text-foreground tabular-nums leading-tight">
+          <div className="flex flex-col text-foreground tabular-nums leading-tight ml-2 md:ml-3">
             <span className="text-[0.7rem] leading-tight text-left">{dateParts.date}</span>
             <span className="text-[1.3rem] font-semibold leading-tight text-left">{dateParts.time}</span>
           </div>
