@@ -60,7 +60,7 @@ export default function Index() {
   return (
     <main
       className={cn(
-        "mx-auto max-w-7xl w-full px-4 md:px-6 pb-12 pt-6 md:pt-8 min-h-screen bg-no-repeat bg-cover bg-center",
+        "w-full min-h-screen bg-no-repeat bg-cover bg-center",
       )}
       style={{
         backgroundImage:
@@ -68,7 +68,8 @@ export default function Index() {
         backgroundPosition: "center top",
       }}
     >
-      <h1 className="sr-only">
+      <div className="mx-auto max-w-7xl w-full px-4 md:px-6 pb-12 pt-6 md:pt-8">
+        <h1 className="sr-only">
         Azerbaijan Ministry of Energy Electronic Information Board
       </h1>
       <div className="flex flex-col items-center gap-6 md:gap-8">
@@ -169,6 +170,7 @@ export default function Index() {
           {lang === "az" ? "Nəticə tapılmadı" : "No results"}
         </div>
       )}
+      </div>
     </main>
   );
 }
