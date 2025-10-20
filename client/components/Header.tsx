@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Facebook, Globe, Instagram, Linkedin, Menu, Send, Twitter, X, Youtube } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Facebook, Globe, Instagram, Linkedin, Menu, Search, Send, X, Youtube } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useSettings } from "@/contexts/settings";
 import { useData } from "@/contexts/data";
@@ -19,10 +20,17 @@ export default function Header() {
   const location = useLocation();
   const isHome = location.pathname === "/";
 
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchText, setSearchText] = useState(params.get("q") ?? "");
+
   useEffect(() => {
     const i = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(i);
   }, []);
+
+  useEffect(() => {
+    setSearchText(params.get("q") ?? "");
+  }, [params]);
 
   const dateParts = useMemo(() => {
     const d = now;
@@ -52,11 +60,7 @@ export default function Header() {
         month: "long",
         day: "numeric",
       }).format(d);
-      const time = new Intl.DateTimeFormat("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      }).format(d);
+      const time = `${h}:${m}:${s}`;
       return { date, time };
     } catch {
       return { date: now.toLocaleDateString(), time: now.toLocaleTimeString() };
@@ -69,7 +73,7 @@ export default function Header() {
     if (normalized.includes("instagram")) return Instagram;
     if (normalized.includes("youtube")) return Youtube;
     if (normalized.includes("linkedin")) return Linkedin;
-    if (normalized.includes("twitter") || normalized === "x" || normalized.startsWith("x/")) return Twitter;
+    if (normalized.includes("twitter") || normalized === "x" || normalized.startsWith("x/")) return X;
     if (normalized.includes("telegram")) return Send;
     return Globe;
   };
@@ -77,88 +81,81 @@ export default function Header() {
   const socialLinks = useMemo(() => {
     const provided = settings.public_relations_details?.socials?.filter(
       (item): item is { label: string; url: string } => Boolean(item?.label && item?.url)
-    );
+    ) || [];
+
     const fallback = [
       { label: "Facebook", url: "https://facebook.com/minenergyaz" },
-      { label: "X/Twitter", url: "https://twitter.com/minenergyaz" },
+      { label: "Instagram", url: "https://instagram.com/minenergyaz" },
+      { label: "X", url: "https://x.com/minenergyaz" },
       { label: "YouTube", url: "https://youtube.com/@minenergyaz" },
     ];
-    return provided && provided.length > 0 ? provided : fallback;
+
+    const desiredOrder = ["facebook", "instagram", "x", "twitter", "youtube"];
+    const all = [...provided, ...fallback];
+    const uniqueByHost: { [k: string]: { label: string; url: string } } = {};
+    for (const item of all) {
+      const n = item.label.toLowerCase();
+      const key = desiredOrder.find((k) => n.includes(k)) ?? n;
+      if (!uniqueByHost[key]) uniqueByHost[key] = item;
+    }
+    const ordered: { label: string; url: string }[] = [];
+    for (const key of ["facebook", "instagram", "x", "youtube"]) {
+      const k = key === "x" ? (uniqueByHost["x"] ? "x" : "twitter") : key;
+      if (uniqueByHost[k]) ordered.push(uniqueByHost[k]);
+    }
+    return ordered;
   }, [settings.public_relations_details?.socials]);
 
-  const callCenterWidthClasses = "w-20 sm:w-24 md:w-28";
+  const callCenterWidthClasses = "w-24 sm:w-28 md:w-32";
 
-  const q = params.get("q") ?? "";
+  const applySearch = (value: string) => {
+    const v = value.trim();
+    const next = new URLSearchParams(params);
+    if (v) next.set("q", v);
+    else next.delete("q");
+    setParams(next, { replace: true });
+    setSearchOpen(false);
+    if (v) {
+      if (location.pathname !== "/search") navigate("/search", { replace: false });
+    } else {
+      if (location.pathname !== "/") navigate("/", { replace: false });
+    }
+  };
 
   return (
     <header className="sticky top-0 z-30 w-full border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-      <div className="mx-auto max-w-7xl w-full px-4 md:px-6 py-3 md:py-4 grid grid-cols-2 md:grid-cols-4 gap-3 items-center">
-        <div className="col-span-1 flex items-center gap-3 md:gap-4">
+      <div className="mx-auto max-w-7xl w-full px-4 md:px-6 py-3 md:py-4 grid grid-cols-2 md:grid-cols-3 gap-3 items-center">
+        {/* Left: Date & Time */}
+        <div className="col-span-1 order-1 md:order-1 flex items-center justify-start">
+          <div className="text-left text-xs md:text-sm leading-tight text-muted-foreground w-[200px] md:w-[240px]">
+            <div className="font-medium text-foreground">
+              <div className="tabular-nums w-full inline-block text-center">{dateParts.date}</div>
+              <div className="tabular-nums w-full inline-block text-center">{dateParts.time}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Center: Logo and Call Center */}
+        <div className="col-span-1 order-2 md:order-2 flex flex-col items-center justify-center gap-1">
           <a href="https://minenergy.gov.az/" aria-label="Energetika Nazirliyinin rəsmi saytı" className="block">
             <img
-              src={(lang === "az" ? settings.logo.az : settings.logo.en) || "https://cdn.builder.io/api/v1/image/assets%2F580773eac62d413f979e27499c2b5554%2F6377430ab15146f4800001679726eb9f?format=webp&width=800"}
+              src={(lang === "az" ? settings.logo.az : settings.logo.en) || "https://cdn.builder.io/api/v1/image/assets%2F580773eac62d413f979e27499c2b5554%2F6377430ab15146f4800001679726eb9f"}
               alt="Azerbaijan Ministry of Energy"
-              className="h-16 md:h-24 lg:h-28 xl:h-32 w-auto object-contain"
+              className="h-20 md:h-28 lg:h-32 xl:h-36 w-auto object-contain"
             />
           </a>
-        </div>
-
-        <div className="col-span-1 md:col-span-2 order-3 md:order-2">
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4">
-            <Input
-              placeholder={lang === "az" ? "Axtarış..." : "Search..."}
-              value={q}
-              onChange={(e) => {
-                const v = e.target.value;
-                const next = new URLSearchParams(params);
-                if (v) next.set("q", v);
-                else next.delete("q");
-                setParams(next, { replace: true });
-                if (v) {
-                  if (location.pathname !== "/search")
-                    navigate("/search", { replace: false });
-                } else {
-                  if (location.pathname !== "/")
-                    navigate("/", { replace: false });
-                }
-              }}
-              className="h-11 md:h-12 rounded-xl text-sm md:text-base w-48 sm:w-56 md:w-64 lg:w-72"
-            />
-            <div className="flex items-center gap-2 sm:gap-2.5">
-              {socialLinks.map((social, index) => {
-                const Icon = resolveSocialIcon(social.label);
-                return (
-                  <a
-                    key={`${social.label}-${index}`}
-                    href={social.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-white/80 text-primary transition-colors duration-200 hover:bg-primary hover:text-white"
-                  >
-                    <Icon className="h-4 w-4" aria-hidden="true" />
-                    <span className="sr-only">{social.label}</span>
-                  </a>
-                );
-              })}
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <Button className={`h-12 ${callCenterWidthClasses} rounded-2xl text-xl font-bold bg-primary hover:bg-primary/90`}>
-                974
-              </Button>
-              <span className={`block text-[10px] md:text-[11px] font-semibold text-muted-foreground text-center uppercase tracking-[0.08em] ${callCenterWidthClasses}`}>
-                {lang === "az" ? "Çağrı Mərkəzi" : "Call Center"}
-              </span>
-            </div>
+          <div className="flex flex-col items-center gap-1">
+            <Button className={`h-12 ${callCenterWidthClasses} rounded-2xl text-2xl md:text-3xl font-bold bg-primary hover:bg-primary/90`}>
+              974
+            </Button>
+            <span className={`block text-[10px] md:text-[11px] font-semibold text-muted-foreground text-center uppercase tracking-[0.08em] ${callCenterWidthClasses}`}>
+              {lang === "az" ? "Çağrı Mərkəzi" : "Call Center"}
+            </span>
           </div>
         </div>
 
-        <div className="col-span-1 md:col-span-1 order-2 md:order-3 flex items-center justify-end gap-3 md:gap-4">
-          <div className="text-right text-xs md:text-sm leading-tight text-muted-foreground w-[200px] md:w-[240px]">
-            <div className="font-medium text-foreground">
-              <div>{dateParts.date}</div>
-              <div>{dateParts.time}</div>
-            </div>
-          </div>
+        {/* Right: Language, Socials, Search Button, Menu */}
+        <div className="col-span-1 order-3 md:order-3 flex items-center justify-end gap-3 md:gap-4">
           <div className="flex bg-muted rounded-lg p-1">
             <button
               aria-label="Azerbaijani"
@@ -175,6 +172,48 @@ export default function Header() {
               EN
             </button>
           </div>
+
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            {socialLinks.map((social, index) => {
+              const Icon = resolveSocialIcon(social.label);
+              return (
+                <a
+                  key={`${social.label}-${index}`}
+                  href={social.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-white/80 text-primary transition-colors duration-200 hover:bg-primary hover:text-white"
+                >
+                  <Icon className="h-4 w-4" aria-hidden="true" />
+                  <span className="sr-only">{social.label}</span>
+                </a>
+              );
+            })}
+          </div>
+
+          <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="rounded-2xl h-10 md:h-11 px-3 md:px-4">
+                <Search className="h-4 w-4 mr-2" />
+                {lang === "az" ? "Axtarış" : "Search"}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-transparent border-none shadow-none p-0">
+              <div className="w-full max-w-xl mx-auto">
+                <Input
+                  autoFocus
+                  placeholder={lang === "az" ? "Axtarış..." : "Search..."}
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") applySearch(searchText);
+                  }}
+                  className="h-14 md:h-16 rounded-2xl text-lg md:text-xl shadow-lg"
+                />
+              </div>
+            </DialogContent>
+          </Dialog>
+
           {!isHome && (
             <Sheet>
               <SheetTrigger asChild>
