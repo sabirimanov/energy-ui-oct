@@ -106,8 +106,6 @@ export default function Header() {
     return ordered;
   }, [settings.public_relations_details?.socials]);
 
-  const callCenterWidthClasses = "w-24 sm:w-28 md:w-32";
-
   const applySearch = (value: string) => {
     const v = value.trim();
     const next = new URLSearchParams(params);
@@ -124,55 +122,50 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-30 w-full border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-      <div className="mx-auto max-w-7xl w-full px-4 md:px-6 py-3 md:py-4 grid grid-cols-2 md:grid-cols-3 gap-3 items-center">
-        {/* Left: Date & Time */}
-        <div className="col-span-1 order-1 md:order-1 flex items-center justify-start">
-          <div className="text-left text-xs md:text-sm leading-tight text-muted-foreground w-[200px] md:w-[240px]">
-            <div className="font-medium text-foreground">
-              <div className="tabular-nums w-full inline-block text-center">{dateParts.date}</div>
-              <div className="tabular-nums w-full inline-block text-center">{dateParts.time}</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Center: Logo and Call Center */}
-        <div className="col-span-1 order-2 md:order-2 flex flex-col items-center justify-center gap-1">
-          <a href="https://minenergy.gov.az/" aria-label="Energetika Nazirliyinin rəsmi saytı" className="block">
-            <img
-              src={(lang === "az" ? settings.logo.az : settings.logo.en) || "https://cdn.builder.io/api/v1/image/assets%2F580773eac62d413f979e27499c2b5554%2F6377430ab15146f4800001679726eb9f"}
-              alt="Azerbaijan Ministry of Energy"
-              className="h-20 md:h-28 lg:h-32 xl:h-36 w-auto object-contain"
-            />
-          </a>
-          <div className="flex flex-col items-center gap-1">
-            <Button className={`h-12 ${callCenterWidthClasses} rounded-2xl text-2xl md:text-3xl font-bold bg-primary hover:bg-primary/90`}>
-              974
-            </Button>
-            <span className={`block text-[10px] md:text-[11px] font-semibold text-muted-foreground text-center uppercase tracking-[0.08em] ${callCenterWidthClasses}`}>
-              {lang === "az" ? "Çağrı Mərkəzi" : "Call Center"}
-            </span>
-          </div>
-        </div>
-
-        {/* Right: Language, Socials, Search Button, Menu */}
-        <div className="col-span-1 order-3 md:order-3 flex items-center justify-end gap-3 md:gap-4">
+      <div className="mx-auto max-w-7xl w-full px-4 md:px-6 py-2 md:py-2.5 grid grid-cols-3 items-center gap-3">
+        {/* Left: Lang -> 974 -> Date/Time */}
+        <div className="col-span-1 flex items-center gap-2 md:gap-3">
           <div className="flex bg-muted rounded-lg p-1">
             <button
               aria-label="Azerbaijani"
               onClick={() => setLang("az")}
-              className={`px-3 md:px-4 py-2 rounded-md text-sm md:text-base font-semibold ${lang === "az" ? "bg-background text-foreground shadow" : "text-foreground/70"}`}
+              className={`px-2.5 md:px-3.5 py-1.5 rounded-md text-sm font-semibold ${lang === "az" ? "bg-background text-foreground shadow" : "text-foreground/70"}`}
             >
               AZ
             </button>
             <button
               aria-label="English"
               onClick={() => setLang("en")}
-              className={`px-3 md:px-4 py-2 rounded-md text-sm md:text-base font-semibold ${lang === "en" ? "bg-background text-foreground shadow" : "text-foreground/70"}`}
+              className={`px-2.5 md:px-3.5 py-1.5 rounded-md text-sm font-semibold ${lang === "en" ? "bg-background text-foreground shadow" : "text-foreground/70"}`}
             >
               EN
             </button>
           </div>
 
+          <Button className="h-10 px-4 rounded-2xl text-2xl font-bold bg-primary hover:bg-primary/90">
+            974
+          </Button>
+
+          <div className="flex items-baseline gap-2 text-foreground tabular-nums">
+            <span className="text-sm md:text-base leading-none">{dateParts.date}</span>
+            <span className="opacity-40">|</span>
+            <span className="text-base md:text-lg font-medium leading-none">{dateParts.time}</span>
+          </div>
+        </div>
+
+        {/* Center: Logo */}
+        <div className="col-span-1 flex items-center justify-center">
+          <a href="https://minenergy.gov.az/" aria-label="Energetika Nazirliyinin rəsmi saytı" className="block">
+            <img
+              src={(lang === "az" ? settings.logo.az : settings.logo.en) || "https://cdn.builder.io/api/v1/image/assets%2F580773eac62d413f979e27499c2b5554%2F6377430ab15146f4800001679726eb9f"}
+              alt="Azerbaijan Ministry of Energy"
+              className="h-16 md:h-18 lg:h-20 w-auto object-contain"
+            />
+          </a>
+        </div>
+
+        {/* Right: Socials, Search icon, Menu */}
+        <div className="col-span-1 flex items-center justify-end gap-2 md:gap-3">
           <div className="flex items-center gap-2 sm:gap-2.5">
             {socialLinks.map((social, index) => {
               const Icon = resolveSocialIcon(social.label);
@@ -182,7 +175,7 @@ export default function Header() {
                   href={social.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-white/80 text-primary transition-colors duration-200 hover:bg-primary hover:text-white"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border/60 bg-white/80 text-primary transition-colors duration-200 hover:bg-primary hover:text-white"
                 >
                   <Icon className="h-4 w-4" aria-hidden="true" />
                   <span className="sr-only">{social.label}</span>
@@ -193,13 +186,12 @@ export default function Header() {
 
           <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="rounded-2xl h-10 md:h-11 px-3 md:px-4">
-                <Search className="h-4 w-4 mr-2" />
-                {lang === "az" ? "Axtarış" : "Search"}
+              <Button variant="outline" size="icon" className="rounded-2xl h-9 w-9">
+                <Search className="h-4 w-4" />
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-transparent border-none shadow-none p-0">
-              <div className="w-full max-w-xl mx-auto">
+              <div className="w-full max-w-xl mx-auto relative">
                 <Input
                   autoFocus
                   placeholder={lang === "az" ? "Axtarış..." : "Search..."}
@@ -208,8 +200,15 @@ export default function Header() {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") applySearch(searchText);
                   }}
-                  className="h-14 md:h-16 rounded-2xl text-lg md:text-xl shadow-lg"
+                  className="h-14 md:h-16 pr-14 rounded-2xl text-lg md:text-xl shadow-lg"
                 />
+                <Button
+                  aria-label={lang === "az" ? "Axtar" : "Search"}
+                  onClick={() => applySearch(searchText)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-11 w-11 rounded-xl"
+                >
+                  <Search className="h-5 w-5" />
+                </Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -217,7 +216,7 @@ export default function Header() {
           {!isHome && (
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-2xl h-12 w-12 md:h-12 md:w-12 [&_svg]:!size-6">
+                <Button variant="ghost" size="icon" className="rounded-2xl h-10 w-10 md:h-10 md:w-10 [&_svg]:!size-6">
                   <Menu />
                 </Button>
               </SheetTrigger>
