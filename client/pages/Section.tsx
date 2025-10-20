@@ -171,7 +171,7 @@ export default function SectionPage() {
             {(section as any).children.map((c: any) => (
               <Link
                 key={c.id}
-                to={`/section/${section.id}/page/${c.id}`}
+                to={`/page/${c.id}`}
                 className="rounded-2xl border bg-card overflow-hidden hover:shadow-md transition-shadow block"
               >
                 <div className="aspect-[16/9] w-full bg-muted/50">
