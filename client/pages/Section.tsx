@@ -65,9 +65,20 @@ export default function SectionPage() {
                   </div>
                   <div className="rounded-xl border bg-card p-4">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground"><Phone className="h-4 w-4 text-blue-600" />{lang === "az" ? "Telefon" : "Phone"}</div>
-                    <a href={`tel:${(settings.public_relations_details?.phone ?? "+994125001111").replace(/\s|-/g, "")}`} className="text-lg font-semibold">
-                      {settings.public_relations_details?.phone ? settings.public_relations_details.phone.replace(/^\+?(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})$/, "+$1 $2 $3 $4 $5") : "+994 12 500 11 11"}
-                    </a>
+                    {(() => {
+                      const raw = settings.public_relations_details?.phone ?? "+994 12 500 11 11";
+                      const parts = raw.split(",").map((s) => s.trim()).filter(Boolean);
+                      const clean = (s: string) => s.replace(/[^+\d]/g, "");
+                      return (
+                        <div className="text-lg font-semibold leading-relaxed">
+                          {parts.map((p, i) => (
+                            <div key={i}>
+                              <a href={`tel:${clean(p)}`}>{p}</a>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })()}
                   </div>
                   <div className="rounded-xl border bg-card p-4 sm:col-span-2">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground"><Megaphone className="h-4 w-4 text-blue-600" />{lang === "az" ? "Mətbuat qaydaları" : "Media guidelines"}</div>
@@ -127,7 +138,7 @@ export default function SectionPage() {
                   </div>
                   <div className="rounded-xl border bg-card p-4">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground"><Clock className="h-4 w-4 text-blue-600" />{lang === "az" ? "İş saatları" : "Working hours"}</div>
-                    <div className="text-lg font-semibold">{lang === "az" ? (settings.contact_details?.hours_az ?? "B.e.–C.a. 09:00–18:00") : (settings.contact_details?.hours_en ?? "Mon–Fri 09:00–18:00")}</div>
+                    <div className="text-lg font-semibold">{lang === "az" ? (settings.contact_details?.hours_az ?? "B.e.–C.a. 09:00–18:00") : (settings.contact_details?.hours_en ?? "Mon–Fri 09:00��18:00")}</div>
                   </div>
                   <div className="rounded-xl border bg-card p-4">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground"><MapPin className="h-4 w-4 text-blue-600" />{lang === "az" ? "Ünvan" : "Address"}</div>
@@ -151,13 +162,79 @@ export default function SectionPage() {
           </div>
         </div>
         <div className="justify-self-end">
-          <img
-            src={section.general_info.image || settings.placeholder || "/placeholder.svg"}
-            alt=""
-            className="w-full max-w-sm md:max-w-xs rounded-xl border"
-          />
+          {section.general_info.image && section.general_info.image !== "/placeholder.svg" && (
+            <img
+              src={section.general_info.image}
+              alt=""
+              className="w-full max-w-sm md:max-w-xs rounded-xl border"
+            />
+          )}
         </div>
       </section>
+
+      {/* Children Sections List */}
+      {Array.isArray((section as any)?.children) && (section as any).children.length > 0 && (
+        <section className="mt-8 md:mt-12">
+          <h3 className="text-xl md:text-2xl font-semibold">
+            {lang === "az" ? "Bölmələr" : "Sections"}
+          </h3>
+          <div className="mt-4 grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {(section as any).children.map((c: any) => (
+              c.redirect_url ? (
+                <a
+                  key={c.id}
+                  href={c.redirect_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-2xl border bg-card overflow-hidden hover:shadow-md transition-shadow block"
+                >
+                  <div className="aspect-[16/9] w-full bg-muted/50">
+                    {c.image && c.image !== "/placeholder.svg" ? (
+                      <img src={c.image} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full grid place-items-center text-muted-foreground">{lang === "az" ? (c.title_az ?? c.title?.az) : (c.title_en ?? c.title?.en)}</div>
+                    )}
+                  </div>
+                  <div className="p-4 md:p-5">
+                    <h4 className="mt-1 md:mt-2 text-lg md:text-xl font-semibold">
+                      {lang === "az" ? (c.title_az ?? c.title?.az) : (c.title_en ?? c.title?.en)}
+                    </h4>
+                    {c.short_text && (
+                      <p className="mt-2 text-sm md:text-base text-muted-foreground">
+                        {lang === "az" ? (c.short_text.az ?? c.short_text) : (c.short_text.en ?? c.short_text)}
+                      </p>
+                    )}
+                  </div>
+                </a>
+              ) : (
+                <Link
+                  key={c.id}
+                  to={`/page/${c.id}`}
+                  className="rounded-2xl border bg-card overflow-hidden hover:shadow-md transition-shadow block"
+                >
+                  <div className="aspect-[16/9] w-full bg-muted/50">
+                    {c.image && c.image !== "/placeholder.svg" ? (
+                      <img src={c.image} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full grid place-items-center text-muted-foreground">{lang === "az" ? (c.title_az ?? c.title?.az) : (c.title_en ?? c.title?.en)}</div>
+                    )}
+                  </div>
+                  <div className="p-4 md:p-5">
+                    <h4 className="mt-1 md:mt-2 text-lg md:text-xl font-semibold">
+                      {lang === "az" ? (c.title_az ?? c.title?.az) : (c.title_en ?? c.title?.en)}
+                    </h4>
+                    {c.short_text && (
+                      <p className="mt-2 text-sm md:text-base text-muted-foreground">
+                        {lang === "az" ? (c.short_text.az ?? c.short_text) : (c.short_text.en ?? c.short_text)}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              )
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Gallery Albums (only for non-special sections) */}
       {!isSpecial && Array.isArray((section as any).albums) && (section as any).albums.length > 0 && (
@@ -174,27 +251,53 @@ export default function SectionPage() {
           </h3>
           <div className="mt-4 grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {section.pages.map((p) => (
-              <Link
-                key={p.id}
-                to={`/section/${section.id}/page/${p.id}`}
-                className="rounded-2xl border bg-card overflow-hidden hover:shadow-md transition-shadow block"
-              >
-                <div className="aspect-[16/9] w-full bg-muted/50">
-                  <img
-                    src={p.image || settings.placeholder || "/placeholder.svg"}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-4 md:p-5">
-                  <h4 className="mt-1 md:mt-2 text-lg md:text-xl font-semibold">
-                    {lang === "az" ? p.title.az : p.title.en}
-                  </h4>
-                  <p className="mt-2 text-sm md:text-base text-muted-foreground">
-                    {lang === "az" ? p.short_text.az : p.short_text.en}
-                  </p>
-                </div>
-              </Link>
+              p.redirect_url ? (
+                <a
+                  key={p.id}
+                  href={p.redirect_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-2xl border bg-card overflow-hidden hover:shadow-md transition-shadow block"
+                >
+                  <div className="aspect-[16/9] w-full bg-muted/50">
+                    <img
+                      src={p.image || settings.placeholder || "/placeholder.svg"}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4 md:p-5">
+                    <h4 className="mt-1 md:mt-2 text-lg md:text-xl font-semibold">
+                      {lang === "az" ? p.title.az : p.title.en}
+                    </h4>
+                    <p className="mt-2 text-sm md:text-base text-muted-foreground">
+                      {lang === "az" ? p.short_text.az : p.short_text.en}
+                    </p>
+                  </div>
+                </a>
+              ) : (
+                <Link
+                  key={p.id}
+                  to={`/section/${section.id}/page/${p.id}`}
+                  className="rounded-2xl border bg-card overflow-hidden hover:shadow-md transition-shadow block"
+                >
+                  <div className="aspect-[16/9] w-full bg-muted/50">
+                    <img
+                      src={p.image || settings.placeholder || "/placeholder.svg"}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4 md:p-5">
+                    <h4 className="mt-1 md:mt-2 text-lg md:text-xl font-semibold">
+                      {lang === "az" ? p.title.az : p.title.en}
+                    </h4>
+                    <p className="mt-2 text-sm md:text-base text-muted-foreground">
+                      {lang === "az" ? p.short_text.az : p.short_text.en}
+                    </p>
+                  </div>
+                </Link>
+              )
             ))}
           </div>
         </section>

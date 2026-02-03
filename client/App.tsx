@@ -41,6 +41,7 @@ const App = () => (
                   path="/section/:id/page/:pageId"
                   element={<SubPage />}
                 />
+                <Route path="/page/:pageId" element={<SubPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
